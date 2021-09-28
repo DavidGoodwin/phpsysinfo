@@ -23,11 +23,16 @@ define('PSI_APP_ROOT', dirname(__FILE__));
 
 require_once PSI_APP_ROOT . '/includes/autoloader.inc.php';
 
+// if there's crap in $_GET['plugin'] just abort.
+if (!empty($_GET['plugin']) && preg_match('/[^A-Za-z]/', $_GET['plugin'])) {
+    exit(0);
+}
+
 if ((isset($_GET['json']) || isset($_GET['jsonp'])) && !extension_loaded("json")) {
     echo '<Error Message="The json extension to php required!" Function="ERROR"/>';
 } else {
     // check what xml part should be generated
-    if (!empty($_GET['plugin']) && !preg_match('/[^A-Za-z]/', $_GET['plugin'])) {
+    if (!empty($_GET['plugin'])) {
         $output = new WebpageXML($_GET['plugin']);
     } else {
         $output = new WebpageXML();
